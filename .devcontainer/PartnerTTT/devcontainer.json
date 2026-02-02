@@ -46,7 +46,7 @@
     },
 
     // 4. 工作目录调整：启动后自动进入实验代码所在的 asset-manager 文件夹
-    "workspaceFolder": "/workspace/Copilot-App-Modernization-Java-Lab/asset-manager",
+    "workspaceFolder": "/workspaces/Copilot-App-Modernization-Java-Lab/asset-manager",
 
     // 5. 自动化初始化指令：启动后自动拉起数据库和消息队列，并预构建项目
     // 使用 -f 指向正确的相对路径：../../asset-manager/docker-compose.yml
