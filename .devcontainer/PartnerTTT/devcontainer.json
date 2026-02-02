@@ -1,8 +1,8 @@
 {
     "name": "Java App Modernization Lab (Standard)",
     
-    // 使用微软官方提供的通用 Java 开发镜像，环境非常稳定
-    "image": "mcr.microsoft.com/devcontainers/java:1-8-bullseye",
+    // 使用微软官方提供的基础镜像
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
 
     // 1. 核心环境特性配置
     "features": {
