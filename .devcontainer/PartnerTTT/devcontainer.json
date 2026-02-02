@@ -1,0 +1,56 @@
+{
+    "name": "Java App Modernization Lab (Standard)",
+    
+    // 使用微软官方提供的通用 Java 开发镜像，环境非常稳定
+    "image": "mcr.microsoft.com/devcontainers/java:1-8-bullseye",
+
+    // 1. 核心环境特性配置
+    "features": {
+        // 确保安装了 Maven (默认会安装最新的 3.9.x，完全兼容并优于 3.6.0)
+        "ghcr.io/devcontainers/features/java:1": {
+            "version": "8",
+            "installMaven": "true",
+            "jdkDistro": "tem"
+        },
+        // 核心：允许在 Codespaces 内部运行 Docker 指令，用于启动 asset-manager 的依赖
+        "ghcr.io/devcontainers/features/docker-in-docker:1": {
+            "version": "latest"
+        }
+    },
+
+    // 2. 自动安装实验所需的 VS Code 插件
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vscjava.vscode-java-pack",       // Java 核心语言包
+                "GitHub.copilot",                 // Copilot 主插件
+                "GitHub.copilot-chat",            // Copilot Chat (App Mod 的操作界面)
+                "vscjava.vscode-java-upgrade",    // 【插件A】Java 升级/重构核心
+                "vscjava.migrate-java-to-azure",  // 【插件B】Azure 现代化/云化核心
+                "ms-azuretools.vscode-docker"     // 方便学员在侧边栏观察数据库容器状态
+            ],
+            "settings": {
+                "java.configuration.runtimes": [
+                    { "name": "JavaSE-1.8", "path": "/usr/local/sdkman/candidates/java/current", "default": true }
+                ]
+            }
+        }
+    },
+
+    // 3. 端口转发：让学员在本地浏览器能访问云端运行的服务
+    "forwardPorts": [8080, 5432, 15672],
+    "portsAttributes": {
+        "8080": { "label": "Java Web App", "onAutoForward": "openBrowser" },
+        "15672": { "label": "RabbitMQ Management" },
+        "5432": { "label": "PostgreSQL" }
+    },
+
+    // 4. 工作目录调整：启动后自动进入实验代码所在的 asset-manager 文件夹
+    "workspaceFolder": "/workspace/Copilot-App-Modernization-Java-Lab/asset-manager",
+
+    // 5. 自动化初始化指令：启动后自动拉起数据库和消息队列，并预构建项目
+    // 使用 -f 指向正确的相对路径：../../asset-manager/docker-compose.yml
+    "postCreateCommand": "docker-compose -f docker-compose.yml up -d && mvn clean install -DskipTests",
+
+    "remoteUser": "vscode"
+}
