@@ -71,53 +71,53 @@ mvn -version (应显示为 3.6.x 或更高)
 
 docker ps (你应该能看到 postgres 和 rabbitmq 两个容器正在运行)
 
-![检查环境信息](image-4.png)
+![检查环境信息](doc-media/ttt-check-env.png)
 
 2. 运行初始应用
 在终端中进入项目目录并构建：
 
 scripts/startapp.sh
 
-![启动应用](image-3.png)
+![启动应用](doc-media/ttt-start-app.png)
 
 
 3. 访问应用
 当终端显示应用启动成功后，在VS Code端口界面中找到对应Web 应用在本地映射的路径
 
-![查看应用路径地址](image-5.png)
+![查看应用路径地址](doc-media/ttt-view-app-url.png)
 
 点击进入访问Asset manager应用
 
-![访问应用](image-6.png)
+![访问应用](doc-media/ttt-access-app.png)
 
 🤖 第五阶段：开始应用现代化 (AI 介入)
 现在，你已经准备好使用 GitHub Copilot App Mod 进行代码改造了！
 
 点击左侧栏Github Copilot App Moddernization图标，点击Start Assessment启动对代码库的评估
 
-![点击Assessment](image-7.png)
+![点击Assessment](doc-media/ttt-start-assessment.png)
 
 查看评估过程
 
-![评估过程](image-8.png)
+![评估过程](doc-media/ttt-assessment-progress.png)
 
 大约5分钟后，查看评估结果
 
-![查看评估结果](image-9.png)
+![查看评估结果](doc-media/ttt-assessment-result.png)
 
 
 升级Java Runtime & Framework
 
-![升级JavaJava](image-10.png)
+![升级JavaJava](doc-media/ttt-java-upgrade.png)
 
-![升级过程1](image-11.png)
+![升级过程1](doc-media/ttt-upgrade-progress.png)
 
 升级完成，查看升级报告：
 
-![Java环境升级完成](image-12.png)
+![Java环境升级完成](doc-media/ttt-upgrade-complete.png)
 
 在Terminal中输入命令检查应用所使用的Java版本：
 cd /workspaces/Copilot-App-Modernization-Java-Lab/asset-manager && ./mvnw help:evaluate -Dexpression=java.version -q -DforceStdout && echo
 
-![升级后Java版本](image-13.png)
+![升级后Java版本](doc-media/ttt-java-version-check.png)
 
