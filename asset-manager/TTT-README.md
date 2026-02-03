@@ -28,7 +28,7 @@ GitHub 账号权限：
 
 Fork代码仓库：https://github.com/yym2020/Copilot-App-Modernization-Java-Lab 到你的Github账户中，<span style="color:red">**注意请勿修改代码库名称**</span>
 
-点击绿色按钮 <> Code，切换到 Codespaces 选项卡。
+点击按钮 <> Code，切换到 Codespaces 选项卡。
 
 关键步骤：点击 ... (更多选项) -> New with options...。
 
@@ -113,7 +113,7 @@ scripts/startapp.sh
 ![查看评估结果](doc-media/ttt-assessment-result.png)
 
 
-4. 升级Java Runtime & Framework
+4. 升级Java Runtime & Framework （耗时约10-15分钟）
 
 ![升级JavaJava](doc-media/ttt-java-upgrade.png)
 
@@ -122,9 +122,4 @@ scripts/startapp.sh
 5. 升级完成，查看升级报告：
 
 ![Java环境升级完成](doc-media/ttt-upgrade-complete.png)
-
-6. 在Terminal中输入命令检查应用所使用的Java版本：
-cd /workspaces/Copilot-App-Modernization-Java-Lab/asset-manager && ./mvnw help:evaluate -Dexpression=java.version -q -DforceStdout && echo
-
-![升级后Java版本](doc-media/ttt-java-version-check.png)
 
