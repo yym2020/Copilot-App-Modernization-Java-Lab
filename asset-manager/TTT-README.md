@@ -1,6 +1,6 @@
 🚀 GH Copilot App Mod Java 应用现代化实验指南 (GitHub Codespaces 版)
 
-欢迎参加 GitHub Copilot App Modernization 实验！本实验将带你把一个基于 Java 8 的遗留应用（Asset Manager）迁移到现代化的云原生架构。
+欢迎参加 GitHub Copilot App Modernization 实验！本实验将带你把一个基于 Java 8 的遗留应用（Asset Manager）迁移到现代化的架构并做潜在的安全问题修复。
 
 为了避免每个人本地计算机环境的差异带来的挑战，我们将全程使用 GitHub Codespaces。
 
@@ -49,9 +49,9 @@ Machine Type: 选择2-core
 💻 第三阶段：连接到本地 VS Code (推荐)
 虽然浏览器可以运行，但在本地 VS Code 中操作会有更好的 Copilot 体验。
 
-等待云端环境初始化（约 2-3 分钟）。
+等待云端环境初始化（约 3-5 分钟）。
 
-环境启动后，点击左下角的 "Codespaces" 绿色状态栏，选择 "Open in VS Code"。
+环境启动后，点击左下角的 "Codespaces" 蓝色状态栏，选择 "Open in VS Code"。
 
 ![在本地VS Code中打开Codespace项目](doc-media/ttt-open-in-vscode.png)
 
@@ -59,21 +59,28 @@ Machine Type: 选择2-core
 
 ![核对项目名称](doc-media/ttt-verify-project-name.png)
 
+在本地VS Code窗口中默认配置根据图示选择“否”
+
+![初始配置选择否](doc-media/ttt-config-select-no.png)
+
 ✅ 第四阶段：环境验证与运行
 环境启动后，它会自动执行初始化脚本。请在 VS Code 终端中检查：
 
-1. 验证版本信息
+1. 在VS Code中打开Terminal终端窗口：
+
+![打开终端窗口](doc-media/ttt-open-terminal.png)
+
+2. 验证版本信息
 输入以下命令，确认环境是否正确：
 
 java -version (应显示为 1.8.x)
 
 mvn -version (应显示为 3.6.x 或更高)
 
-docker ps (你应该能看到 postgres 和 rabbitmq 两个容器正在运行)
 
 ![检查环境信息](doc-media/ttt-check-env.png)
 
-2. 运行初始应用
+3. 运行初始应用
 在终端中进入项目目录并构建：
 
 scripts/startapp.sh
@@ -81,7 +88,7 @@ scripts/startapp.sh
 ![启动应用](doc-media/ttt-start-app.png)
 
 
-3. 访问应用
+4. 访问应用
 当终端显示应用启动成功后，在VS Code端口界面中找到对应Web 应用在本地映射的路径
 
 ![查看应用路径地址](doc-media/ttt-view-app-url.png)
@@ -93,30 +100,30 @@ scripts/startapp.sh
 🤖 第五阶段：开始应用现代化 (AI 介入)
 现在，你已经准备好使用 GitHub Copilot App Mod 进行代码改造了！
 
-点击左侧栏Github Copilot App Moddernization图标，点击Start Assessment启动对代码库的评估
+1. 点击左侧栏Github Copilot App Moddernization图标，点击Start Assessment启动对代码库的评估
 
 ![点击Assessment](doc-media/ttt-start-assessment.png)
 
-查看评估过程
+2. 查看评估过程
 
 ![评估过程](doc-media/ttt-assessment-progress.png)
 
-大约5分钟后，查看评估结果
+3. 大约5分钟后，查看评估结果
 
 ![查看评估结果](doc-media/ttt-assessment-result.png)
 
 
-升级Java Runtime & Framework
+4. 升级Java Runtime & Framework
 
 ![升级JavaJava](doc-media/ttt-java-upgrade.png)
 
 ![升级过程1](doc-media/ttt-upgrade-progress.png)
 
-升级完成，查看升级报告：
+5. 升级完成，查看升级报告：
 
 ![Java环境升级完成](doc-media/ttt-upgrade-complete.png)
 
-在Terminal中输入命令检查应用所使用的Java版本：
+6. 在Terminal中输入命令检查应用所使用的Java版本：
 cd /workspaces/Copilot-App-Modernization-Java-Lab/asset-manager && ./mvnw help:evaluate -Dexpression=java.version -q -DforceStdout && echo
 
 ![升级后Java版本](doc-media/ttt-java-version-check.png)
