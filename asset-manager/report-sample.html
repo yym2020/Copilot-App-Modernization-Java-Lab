@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppMod 战略评估与商业价值报告</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans SC', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            900: '#1e3a8a',
+                            950: '#172554',
+                        },
+                        darkbg: '#0b1120',
+                        cardbg: 'rgba(30, 41, 59, 0.7)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b1120;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(37, 99, 235, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(6, 182, 212, 0.15), transparent 25%);
+            background-attachment: fixed;
+            color: #f8fafc;
+        }
+        .glass-card {
+            background: var(--cardbg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-radius: 1rem;
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #60a5fa, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .chart-container {
+            width: 100%;
+            height: 320px;
+        }
+        .gauge-container {
+            width: 100%;
+            height: 220px;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-12">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        
+        <!-- Header Section -->
+        <header class="glass-card p-8 mb-8 relative overflow-hidden">
+            <div class="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 bg-brand-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+            <div class="absolute bottom-0 left-0 -mb-16 -ml-16 w-64 h-64 bg-cyan-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+            
+            <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div>
+                    <h1 class="text-4xl font-bold tracking-tight mb-2">AppMod <span class="gradient-text">云现代化战略评估报告</span></h1>
+                    <p class="text-slate-400 text-lg mb-4">面向决策层的商业视图 · 聚焦投资回报、业务敏捷与风险收敛</p>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="px-3 py-1 rounded-full bg-brand-900/50 border border-brand-500/30 text-brand-100 text-sm font-medium">项目: assets-manager-parent</span>
+                        <span class="px-3 py-1 rounded-full bg-slate-800/80 border border-slate-600/50 text-slate-300 text-sm">评估日期: 2026-02-26</span>
+                        <span class="px-3 py-1 rounded-full bg-emerald-900/40 border border-emerald-500/30 text-emerald-400 text-sm">目标: Azure PaaS / AKS</span>
+                    </div>
+                </div>
+                <div class="w-full md:w-64 shrink-0">
+                    <div id="healthGauge" class="gauge-container"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Business Value & ROI Section -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+                <svg class="w-6 h-6 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                核心商业收益与战略价值
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-6 border-t-4 border-t-emerald-500 hover:bg-slate-800/80 transition-colors">
+                    <div class="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">降本增效 (TCO 优化)</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">通过向 Azure 托管服务（App Service, PostgreSQL）迁移，预计可降低 <span class="text-emerald-400 font-bold">35%</span> 的基础设施与运维成本，消除底层硬件折旧与授权费用。</p>
+                </div>
+                <div class="glass-card p-6 border-t-4 border-t-brand-500 hover:bg-slate-800/80 transition-colors">
+                    <div class="w-12 h-12 rounded-lg bg-brand-500/20 flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">业务敏捷与弹性</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">全面拥抱云原生架构，实现秒级弹性扩缩容。版本发布周期预计缩短 <span class="text-brand-400 font-bold">60%</span>，极大提升对市场需求的响应速度。</p>
+                </div>
+                <div class="glass-card p-6 border-t-4 border-t-purple-500 hover:bg-slate-800/80 transition-colors">
+                    <div class="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">安全合规与风险收敛</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">消除老旧框架（Spring Boot 早期版本）带来的高危漏洞，接入 Azure 企业级安全基线与零信任架构，确保数据资产绝对安全。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- KPIs & Multi-dimensional Analysis -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+            <!-- KPIs -->
+            <div class="lg:col-span-4 flex flex-col gap-4">
+                <div class="glass-card p-5 flex items-center justify-between">
+                    <div>
+                        <p class="text-slate-400 text-sm font-medium mb-1">评估应用数</p>
+                        <p class="text-3xl font-bold text-white">1</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg>
+                    </div>
+                </div>
+                <div class="glass-card p-5 flex items-center justify-between">
+                    <div>
+                        <p class="text-slate-400 text-sm font-medium mb-1">发现问题总数</p>
+                        <p class="text-3xl font-bold text-amber-400">14</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    </div>
+                </div>
+                <div class="glass-card p-5 flex items-center justify-between">
+                    <div>
+                        <p class="text-slate-400 text-sm font-medium mb-1">代码级事件数</p>
+                        <p class="text-3xl font-bold text-rose-400">53</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    </div>
+                </div>
+                <div class="glass-card p-5 flex items-center justify-between">
+                    <div>
+                        <p class="text-slate-400 text-sm font-medium mb-1">预估改造工作量 (Story Points)</p>
+                        <p class="text-3xl font-bold text-brand-400">201</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-brand-500/10 flex items-center justify-center text-brand-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Radar & Line Charts -->
+            <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-card p-6">
+                    <h3 class="text-lg font-semibold mb-2 text-white">云原生就绪度多维评估</h3>
+                    <div id="radarChart" class="chart-container"></div>
+                </div>
+                <div class="glass-card p-6">
+                    <h3 class="text-lg font-semibold mb-2 text-white">现代化演进 ROI 预测</h3>
+                    <div id="roiChart" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Landscape -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+                <svg class="w-6 h-6 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                技术债与风险全景图
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-card p-6">
+                    <h3 class="text-lg font-semibold mb-2 text-white">风险严重级别分布</h3>
+                    <div id="severityChart" class="chart-container"></div>
+                </div>
+                <div class="glass-card p-6">
+                    <h3 class="text-lg font-semibold mb-2 text-white">技术改造领域分布</h3>
+                    <div id="categoryChart" class="chart-container"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top Risks Table -->
+        <section class="mb-8">
+            <div class="glass-card overflow-hidden">
+                <div class="p-6 border-b border-slate-700/50">
+                    <h2 class="text-xl font-semibold text-white">核心改造项与高优行动指南 (Top Priorities)</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-800/50 text-slate-300 text-sm uppercase tracking-wider">
+                                <th class="px-6 py-4 font-medium">优先级</th>
+                                <th class="px-6 py-4 font-medium">技术领域</th>
+                                <th class="px-6 py-4 font-medium">核心规则 / 风险点</th>
+                                <th class="px-6 py-4 font-medium text-center">影响面 (事件数)</th>
+                                <th class="px-6 py-4 font-medium">战略建议与动作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm divide-y divide-slate-700/50">
+                            <tr class="hover:bg-slate-800/30 transition-colors">
+                                <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-500/20 text-rose-400 border border-rose-500/20">P0 阻断级</span></td>
+                                <td class="px-6 py-4 text-white font-medium">框架基线升级</td>
+                                <td class="px-6 py-4 text-slate-400 font-mono text-xs">spring-boot-to-azure-spring-boot-version</td>
+                                <td class="px-6 py-4 text-center text-white font-bold">11</td>
+                                <td class="px-6 py-4 text-slate-300">优先完成 Spring Boot 升级与回归验收，消除底层安全隐患，形成统一云原生运行时基线。</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition-colors">
+                                <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-500/20 text-rose-400 border border-rose-500/20">P0 阻断级</span></td>
+                                <td class="px-6 py-4 text-white font-medium">核心依赖治理</td>
+                                <td class="px-6 py-4 text-slate-400 font-mono text-xs">spring-framework-version</td>
+                                <td class="px-6 py-4 text-center text-white font-bold">8</td>
+                                <td class="px-6 py-4 text-slate-300">与 Spring Boot 升级联动，统一依赖矩阵，彻底解决版本代际带来的兼容性与安全合规风险。</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition-colors">
+                                <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/20">P1 严重级</span></td>
+                                <td class="px-6 py-4 text-white font-medium">消息中间件解耦</td>
+                                <td class="px-6 py-4 text-slate-400 font-mono text-xs">azure-message-queue-config-rabbitmq</td>
+                                <td class="px-6 py-4 text-center text-white font-bold">6</td>
+                                <td class="px-6 py-4 text-slate-300">规划 RabbitMQ 到 Azure Service Bus 的映射与灰度切换路径，实现消息总线的全托管与高可用。</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition-colors">
+                                <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/20">P1 严重级</span></td>
+                                <td class="px-6 py-4 text-white font-medium">数据持久层迁移</td>
+                                <td class="px-6 py-4 text-slate-400 font-mono text-xs">azure-database-postgresql</td>
+                                <td class="px-6 py-4 text-center text-white font-bold">5</td>
+                                <td class="px-6 py-4 text-slate-300">推进 PostgreSQL 托管化评估，重构连接池与认证机制，利用 Azure 托管数据库提升灾备能力。</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition-colors">
+                                <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/20">P2 警告级</span></td>
+                                <td class="px-6 py-4 text-white font-medium">对象存储适配</td>
+                                <td class="px-6 py-4 text-slate-400 font-mono text-xs">azure-aws-config-s3</td>
+                                <td class="px-6 py-4 text-center text-white font-bold">4</td>
+                                <td class="px-6 py-4 text-slate-300">分阶段完成 AWS S3 到 Azure Blob Storage 的 SDK 接口替换与存量数据迁移。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roadmap -->
+        <section>
+            <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+                <svg class="w-6 h-6 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                90天现代化演进路线图
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+                <!-- Connecting Line -->
+                <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-slate-700 -z-10 transform -translate-y-1/2"></div>
+                
+                <div class="glass-card p-6 relative">
+                    <div class="absolute -top-3 left-6 bg-brand-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg shadow-brand-500/30">Phase 1: 0-30 Days</div>
+                    <h3 class="text-xl font-bold text-white mt-4 mb-3">基线升级与高危排雷</h3>
+                    <ul class="space-y-2 text-slate-400 text-sm">
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>完成 Spring Boot 及核心框架大版本升级。</li>
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>修复所有 P0 级别阻断性代码问题。</li>
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>建立本地容器化测试环境。</li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card p-6 relative">
+                    <div class="absolute -top-3 left-6 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg shadow-purple-500/30">Phase 2: 31-60 Days</div>
+                    <h3 class="text-xl font-bold text-white mt-4 mb-3">云原生中间件替换</h3>
+                    <ul class="space-y-2 text-slate-400 text-sm">
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-purple-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>完成 RabbitMQ 到 Azure Service Bus 切换。</li>
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-purple-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>完成 S3 到 Azure Blob 的 SDK 适配。</li>
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-purple-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>数据库连接池重构与托管化对接。</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-6 relative">
+                    <div class="absolute -top-3 left-6 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg shadow-emerald-500/30">Phase 3: 61-90 Days</div>
+                    <h3 class="text-xl font-bold text-white mt-4 mb-3">全面上云与效能释放</h3>
+                    <ul class="space-y-2 text-slate-400 text-sm">
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>部署至 Azure App Service / AKS 生产环境。</li>
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>配置 CI/CD 流水线与自动化扩缩容策略。</li>
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>接入 Azure Monitor 实现全链路可观测性。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ECharts Initialization -->
+    <script>
+        // Common Theme Settings
+        const textColor = '#94a3b8';
+        const splitLineColor = 'rgba(255,255,255,0.05)';
+
+        // 1. Health Gauge Chart
+        const gaugeChart = echarts.init(document.getElementById('healthGauge'));
+        gaugeChart.setOption({
+            series: [{
+                type: 'gauge',
+                startAngle: 180,
+                endAngle: 0,
+                min: 0,
+                max: 100,
+                splitNumber: 10,
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                        { offset: 0, color: '#ef4444' }, // Red
+                        { offset: 0.5, color: '#f59e0b' }, // Yellow
+                        { offset: 1, color: '#10b981' }  // Green
+                    ])
+                },
+                progress: { show: true, width: 12 },
+                pointer: { show: false },
+                axisLine: { lineStyle: { width: 12, color: [[1, 'rgba(255,255,255,0.1)']] } },
+                axisTick: { show: false },
+                splitLine: { show: false },
+                axisLabel: { show: false },
+                detail: {
+                    valueAnimation: true,
+                    offsetCenter: [0, '-10%'],
+                    fontSize: 36,
+                    fontWeight: 'bold',
+                    color: '#fff',
+                    formatter: '{value}'
+                },
+                title: {
+                    offsetCenter: [0, '30%'],
+                    color: '#94a3b8',
+                    fontSize: 14,
+                    show: true
+                },
+                data: [{ value: 68, name: '云就绪度得分' }]
+            }]
+        });
+
+        // 2. Radar Chart (Readiness)
+        const radarChart = echarts.init(document.getElementById('radarChart'));
+        radarChart.setOption({
+            radar: {
+                indicator: [
+                    { name: '架构解耦', max: 100 },
+                    { name: '依赖兼容', max: 100 },
+                    { name: '数据托管', max: 100 },
+                    { name: '安全合规', max: 100 },
+                    { name: '运维观测', max: 100 }
+                ],
+                splitNumber: 4,
+                axisName: { color: '#cbd5e1' },
+                splitLine: { lineStyle: { color: splitLineColor } },
+                splitArea: { show: false },
+                axisLine: { lineStyle: { color: splitLineColor } }
+            },
+            series: [{
+                type: 'radar',
+                data: [
+                    {
+                        value: [85, 40, 60, 75, 50],
+                        name: '当前状态',
+                        itemStyle: { color: '#3b82f6' },
+                        areaStyle: { color: 'rgba(59, 130, 246, 0.3)' }
+                    },
+                    {
+                        value: [95, 100, 100, 95, 90],
+                        name: '目标状态 (90天后)',
+                        itemStyle: { color: '#10b981' },
+                        areaStyle: { color: 'rgba(16, 185, 129, 0.3)' }
+                    }
+                ]
+            }],
+            legend: { bottom: 0, textStyle: { color: textColor } },
+            tooltip: {}
+        });
+
+        // 3. ROI Line Chart
+        const roiChart = echarts.init(document.getElementById('roiChart'));
+        roiChart.setOption({
+            tooltip: { trigger: 'axis' },
+            legend: { bottom: 0, textStyle: { color: textColor } },
+            grid: { left: '3%', right: '4%', bottom: '15%', top: '10%', containLabel: true },
+            xAxis: { 
+                type: 'category', 
+                boundaryGap: false, 
+                data: ['当前', '第1个月', '第2个月', '第3个月', '第6个月', '第12个月'],
+                axisLabel: { color: textColor },
+                axisLine: { lineStyle: { color: splitLineColor } }
+            },
+            yAxis: { 
+                type: 'value',
+                axisLabel: { color: textColor, formatter: '{value}k' },
+                splitLine: { lineStyle: { color: splitLineColor } }
+            },
+            series: [
+                {
+                    name: '传统架构运维成本',
+                    type: 'line',
+                    data: [120, 120, 120, 120, 120, 120],
+                    itemStyle: { color: '#ef4444' },
+                    lineStyle: { type: 'dashed' }
+                },
+                {
+                    name: '云原生架构成本',
+                    type: 'line',
+                    data: [120, 135, 110, 90, 78, 78], // Initial spike due to migration effort, then drops
+                    itemStyle: { color: '#10b981' },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(16, 185, 129, 0.5)' },
+                            { offset: 1, color: 'rgba(16, 185, 129, 0.0)' }
+                        ])
+                    },
+                    smooth: true
+                }
+            ]
+        });
+
+        // 4. Severity Donut Chart
+        const severityChart = echarts.init(document.getElementById('severityChart'));
+        severityChart.setOption({
+            tooltip: { trigger: 'item' },
+            legend: { bottom: 0, textStyle: { color: textColor } },
+            series: [{
+                name: '严重级别',
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 10,
+                    borderColor: '#0b1120',
+                    borderWidth: 2
+                },
+                label: { show: false, position: 'center' },
+                emphasis: {
+                    label: { show: true, fontSize: 20, fontWeight: 'bold', color: '#fff' }
+                },
+                labelLine: { show: false },
+                data: [
+                    { value: 19, name: 'P0 阻断', itemStyle: { color: '#ef4444' } },
+                    { value: 11, name: 'P1 严重', itemStyle: { color: '#f59e0b' } },
+                    { value: 4, name: 'P2 警告', itemStyle: { color: '#10b981' } }
+                ]
+            }]
+        });
+
+        // 5. Category Bar Chart
+        const categoryChart = echarts.init(document.getElementById('categoryChart'));
+        categoryChart.setOption({
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+            grid: { left: '3%', right: '4%', bottom: '5%', top: '5%', containLabel: true },
+            xAxis: { 
+                type: 'value',
+                axisLabel: { color: textColor },
+                splitLine: { lineStyle: { color: splitLineColor } }
+            },
+            yAxis: { 
+                type: 'category', 
+                data: ['存储迁移', '数据库迁移', '消息服务', '框架升级'],
+                axisLabel: { color: textColor },
+                axisLine: { lineStyle: { color: splitLineColor } }
+            },
+            series: [{
+                name: '事件数',
+                type: 'bar',
+                barWidth: '40%',
+                data: [
+                    { value: 4, itemStyle: { color: '#8b5cf6' } },
+                    { value: 5, itemStyle: { color: '#06b6d4' } },
+                    { value: 6, itemStyle: { color: '#f59e0b' } },
+                    { value: 19, itemStyle: { color: '#ef4444' } }
+                ],
+                itemStyle: { borderRadius: [0, 4, 4, 0] }
+            }]
+        });
+
+        // Responsive handling
+        window.addEventListener('resize', function() {
+            gaugeChart.resize();
+            radarChart.resize();
+            roiChart.resize();
+            severityChart.resize();
+            categoryChart.resize();
+        });
+    </script>
+</body>
+</html>
