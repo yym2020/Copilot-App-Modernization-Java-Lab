@@ -30,6 +30,8 @@ Fork代码仓库：https://github.com/yym2020/Copilot-App-Modernization-Java-Lab
 
 点击按钮 <> Code，切换到 Codespaces 选项卡。
 
+![切换到Codespaces](doc-media/ttt-switch-to-codespaces.png)
+
 关键步骤：点击 ... (更多选项) -> New with options...。
 
 在配置页面：
@@ -51,7 +53,7 @@ Machine Type: 选择2-core
 
 等待云端环境初始化（约 3-5 分钟）。
 
-环境启动后，点击左下角的 "Codespaces" 蓝色状态栏，选择 "Open in VS Code"。
+环境启动后，点击左下角的 "Codespaces" 状态栏，选择 "Open in VS Code Desktop"。
 
 ![在本地VS Code中打开Codespace项目](doc-media/ttt-open-in-vscode.png)
 
@@ -83,7 +85,7 @@ mvn -version (应显示为 3.6.x 或更高)
 3. 运行初始应用
 在终端中进入项目目录并构建：
 
-scripts/startapp.sh
+./scripts/startapp.sh
 
 ![启动应用](doc-media/ttt-start-app.png)
 
