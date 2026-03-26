@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppMod Cloud Modernization Strategic Assessment Report - assets-manager-parent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff', 100: '#dbeafe', 400: '#60a5fa',
+                            500: '#3b82f6', 600: '#2563eb', 900: '#1e3a8a', 950: '#172554',
+                        },
+                        darkbg: '#0b1120',
+                        cardbg: 'rgba(30, 41, 59, 0.7)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b1120;
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(37, 99, 235, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(6, 182, 212, 0.15), transparent 25%),
+                radial-gradient(circle at 50% 80%, rgba(139, 92, 246, 0.08), transparent 30%);
+            background-attachment: fixed;
+            color: #f8fafc;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+            border-radius: 1rem;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa, #22d3ee, #a78bfa);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-gold {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .chart-container { width: 100%; height: 340px; }
+        .gauge-container { width: 100%; height: 240px; }
+        .kpi-glow-blue { box-shadow: 0 0 20px rgba(59,130,246,0.15); }
+        .kpi-glow-amber { box-shadow: 0 0 20px rgba(245,158,11,0.15); }
+        .kpi-glow-rose { box-shadow: 0 0 20px rgba(244,63,94,0.15); }
+        .kpi-glow-emerald { box-shadow: 0 0 20px rgba(16,185,129,0.15); }
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(96,165,250,0.3), transparent);
+            margin: 2rem 0;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeInUp 0.6s ease-out forwards; }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(59,130,246,0.2); }
+            50% { box-shadow: 0 0 40px rgba(59,130,246,0.4); }
+        }
+        .pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+        @media print {
+            body { background: #fff; color: #1e293b; }
+            .glass-card { background: #f8fafc; border: 1px solid #e2e8f0; box-shadow: none; backdrop-filter: none; }
+            .gradient-text { -webkit-text-fill-color: #1e3a8a; }
+            .text-slate-400 { color: #475569 !important; }
+            .text-white { color: #1e293b !important; }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-16">
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+
+    <!-- 1. Cover -->
+    <header class="glass-card p-10 mb-10 relative overflow-hidden animate-fade-in">
+        <div class="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-brand-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-cyan-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div>
+                <p class="text-sm uppercase tracking-widest text-brand-400 font-semibold mb-2">Enterprise Application Modernization</p>
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-3">
+                    <span class="gradient-text">Cloud Modernization Strategic Assessment Report</span>
+                </h1>
+                <p class="text-slate-400 text-lg mb-6 max-w-2xl">An executive business view focused on ROI, business agility, and risk reduction with decision-readiness at the center.</p>
+                <div class="flex flex-wrap gap-3">
+                    <span class="px-4 py-1.5 rounded-full bg-brand-900/50 border border-brand-500/30 text-brand-100 text-sm font-medium">Project: assets-manager-parent</span>
+                    <span class="px-4 py-1.5 rounded-full bg-slate-800/80 border border-slate-600/50 text-slate-300 text-sm">Assessment Date: 2026-03-12</span>
+                    <span class="px-4 py-1.5 rounded-full bg-emerald-900/40 border border-emerald-500/30 text-emerald-400 text-sm">JDK 8 · Spring Boot · Maven</span>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <span class="px-3 py-1 rounded-full bg-purple-900/40 border border-purple-500/30 text-purple-300 text-xs">Target: Azure App Service</span>
+                    <span class="px-3 py-1 rounded-full bg-purple-900/40 border border-purple-500/30 text-purple-300 text-xs">Target: Azure Container Apps</span>
+                    <span class="px-3 py-1 rounded-full bg-purple-900/40 border border-purple-500/30 text-purple-300 text-xs">Target: Azure Kubernetes Service</span>
+                </div>
+            </div>
+            <div class="w-full md:w-72 shrink-0">
+                <div id="healthGauge" class="gauge-container"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. Executive Summary -->
+    <section class="mb-10 animate-fade-in">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-brand-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            </div>
+            Executive Summary
+        </h2>
+        <div class="glass-card p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4">
+                <div class="flex items-start gap-3">
+                    <span class="mt-1.5 w-2 h-2 rounded-full bg-rose-500 shrink-0"></span>
+                    <p class="text-slate-300 leading-relaxed"><span class="text-white font-semibold">Technical debt is material:</span> the assessment identified <span class="text-rose-400 font-bold text-lg">17</span> issue groups, <span class="text-rose-400 font-bold text-lg">87</span> code-level incidents, and an estimated modernization effort of <span class="text-amber-400 font-bold text-lg">462</span> story points. The current Java 8 and early Spring Boot baseline introduces significant security and compatibility exposure.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="mt-1.5 w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
+                    <p class="text-slate-300 leading-relaxed"><span class="text-white font-semibold">Blocking risk is concentrated:</span> mandatory incidents account for <span class="text-amber-400 font-bold">63%</span> of findings (55 of 87), primarily in framework upgrades and AWS-to-Azure storage migration.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="mt-1.5 w-2 h-2 rounded-full bg-brand-500 shrink-0"></span>
+                    <p class="text-slate-300 leading-relaxed"><span class="text-white font-semibold">Cloud-native transformation is achievable:</span> the application already shows a service split between web and worker, and the messaging pattern provides a sound foundation for migration to Azure PaaS or AKS.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="mt-1.5 w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                    <p class="text-slate-300 leading-relaxed"><span class="text-white font-semibold">The ROI case is clear:</span> after modernization, operating cost is expected to decrease by more than 35 percent, release cycles by more than 60 percent, and known vulnerability exposure can be removed.</p>
+                </div>
+                <div class="flex items-start gap-3 md:col-span-2">
+                    <span class="mt-1.5 w-2 h-2 rounded-full bg-purple-500 shrink-0"></span>
+                    <p class="text-slate-300 leading-relaxed"><span class="text-white font-semibold">Immediate action is recommended:</span> execute in three stages across a 90-day window, starting with baseline upgrades and high-risk remediation, then middleware replacement, and finally full cloud deployment to unlock business agility.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. KPI Dashboard -->
+    <section class="mb-10">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            </div>
+            KPI Dashboard
+        </h2>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="glass-card p-6 kpi-glow-blue text-center">
+                <p class="text-slate-400 text-sm font-medium mb-2">Applications Assessed</p>
+                <p class="text-5xl font-extrabold text-white mb-1">1</p>
+                <p class="text-xs text-slate-500">assets-manager-parent</p>
+            </div>
+            <div class="glass-card p-6 kpi-glow-amber text-center">
+                <p class="text-slate-400 text-sm font-medium mb-2">Total Issues</p>
+                <p class="text-5xl font-extrabold text-amber-400 mb-1">17</p>
+                <p class="text-xs text-slate-500">Aggregated by rule</p>
+            </div>
+            <div class="glass-card p-6 kpi-glow-rose text-center">
+                <p class="text-slate-400 text-sm font-medium mb-2">Code-Level Incidents</p>
+                <p class="text-5xl font-extrabold text-rose-400 mb-1">87</p>
+                <p class="text-xs text-slate-500">Across multiple files and modules</p>
+            </div>
+            <div class="glass-card p-6 kpi-glow-emerald text-center pulse-glow">
+                <p class="text-slate-400 text-sm font-medium mb-2">Estimated Total Effort</p>
+                <p class="text-5xl font-extrabold text-brand-400 mb-1">462</p>
+                <p class="text-xs text-slate-500">Story Points</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Risk Landscape -->
+    <section class="mb-10">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-rose-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            Risk Landscape
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="glass-card p-6">
+                <h3 class="text-lg font-semibold mb-2 text-white">Severity Distribution</h3>
+                <div id="severityChart" class="chart-container"></div>
+            </div>
+            <div class="glass-card p-6">
+                <h3 class="text-lg font-semibold mb-2 text-white">Transformation Domain Distribution</h3>
+                <div id="categoryChart" class="chart-container"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Multi-dimensional Assessment and ROI -->
+    <section class="mb-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="glass-card p-6">
+                <h3 class="text-lg font-semibold mb-2 text-white">Cloud-Native Readiness Assessment</h3>
+                <div id="radarChart" class="chart-container"></div>
+            </div>
+            <div class="glass-card p-6">
+                <h3 class="text-lg font-semibold mb-2 text-white">Modernization ROI Forecast</h3>
+                <div id="roiChart" class="chart-container"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Top Risks and Priorities -->
+    <section class="mb-10">
+        <div class="glass-card overflow-hidden">
+            <div class="p-6 border-b border-slate-700/50">
+                <h2 class="text-xl font-bold text-white flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    </div>
+                    Top Risks and Priority Actions
+                </h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-800/60 text-slate-300 text-sm uppercase tracking-wider">
+                            <th class="px-6 py-4 font-medium">Priority</th>
+                            <th class="px-6 py-4 font-medium">Technology Domain</th>
+                            <th class="px-6 py-4 font-medium">Core Rule / Risk</th>
+                            <th class="px-6 py-4 font-medium text-center">Incidents</th>
+                            <th class="px-6 py-4 font-medium text-center">Unit Effort</th>
+                            <th class="px-6 py-4 font-medium">Strategic Recommendation</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-slate-700/50">
+                        <tr class="hover:bg-slate-800/30 transition-colors bg-rose-950/10">
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">P0 Blocker</span></td>
+                            <td class="px-6 py-4 text-white font-semibold">Framework Upgrade</td>
+                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">spring-boot-version-01000</td>
+                            <td class="px-6 py-4 text-center text-white font-bold text-lg">12</td>
+                            <td class="px-6 py-4 text-center text-slate-300">8 SP</td>
+                            <td class="px-6 py-4 text-slate-300">Prioritize the Spring Boot major-version upgrade to remove foundational security exposure and establish a modern runtime baseline.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors bg-rose-950/10">
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">P0 Blocker</span></td>
+                            <td class="px-6 py-4 text-white font-semibold">Core Dependency Governance</td>
+                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">spring-framework-version-01000</td>
+                            <td class="px-6 py-4 text-center text-white font-bold text-lg">8</td>
+                            <td class="px-6 py-4 text-center text-slate-300">8 SP</td>
+                            <td class="px-6 py-4 text-slate-300">Coordinate with the Spring Boot upgrade to normalize the dependency matrix and address compatibility and compliance risk together.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors bg-rose-950/10">
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">P0 Blocker</span></td>
+                            <td class="px-6 py-4 text-white font-semibold">Object Storage Migration</td>
+                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">azure-aws-config-s3-03000/03001</td>
+                            <td class="px-6 py-4 text-center text-white font-bold text-lg">12</td>
+                            <td class="px-6 py-4 text-center text-slate-300">8 SP</td>
+                            <td class="px-6 py-4 text-slate-300">Execute a phased migration from AWS S3 to Azure Blob Storage, covering SDK replacement and data transition.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors bg-rose-950/10">
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">P0 Blocker</span></td>
+                            <td class="px-6 py-4 text-white font-semibold">Filesystem Cloud Adaptation</td>
+                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">local-storage-00005</td>
+                            <td class="px-6 py-4 text-center text-white font-bold text-lg">14</td>
+                            <td class="px-6 py-4 text-center text-slate-300">3 SP</td>
+                            <td class="px-6 py-4 text-slate-300">Remove local filesystem dependencies and move to Azure Blob Storage or Azure Files for durable cloud storage.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">P1 Critical</span></td>
+                            <td class="px-6 py-4 text-white font-semibold">Java Version Upgrade</td>
+                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">azure-java-version-02000</td>
+                            <td class="px-6 py-4 text-center text-white font-bold text-lg">1</td>
+                            <td class="px-6 py-4 text-center text-slate-300">5 SP</td>
+                            <td class="px-6 py-4 text-slate-300">Upgrade from Java 8 to Java 17 or 21 to gain current security patches and JVM performance improvements.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">P1 Critical</span></td>
+                            <td class="px-6 py-4 text-white font-semibold">Local JDBC Migration</td>
+                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">localhost-jdbc-00002</td>
+                            <td class="px-6 py-4 text-center text-white font-bold text-lg">2</td>
+                            <td class="px-6 py-4 text-center text-slate-300">5 SP</td>
+                            <td class="px-6 py-4 text-slate-300">Move connection strings to Azure Database for PostgreSQL Flexible Server and prepare the app for managed database operations.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">P1 Critical</span></td>
+                            <td class="px-6 py-4 text-white font-semibold">AWS Region Configuration</td>
+                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">azure-aws-config-region-02000</td>
+                            <td class="px-6 py-4 text-center text-white font-bold text-lg">4</td>
+                            <td class="px-6 py-4 text-center text-slate-300">2 SP</td>
+                            <td class="px-6 py-4 text-slate-300">Replace AWS region settings with the corresponding Azure region identifiers and deployment configuration.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">P1 Critical</span></td>
+                            <td class="px-6 py-4 text-white font-semibold">Containerization Foundation</td>
+                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">dockerfile-00000</td>
+                            <td class="px-6 py-4 text-center text-white font-bold text-lg">1</td>
+                            <td class="px-6 py-4 text-center text-slate-300">3 SP</td>
+                            <td class="px-6 py-4 text-slate-300">Create Dockerfiles to enable container builds and unlock Azure Container Apps or AKS deployment paths.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">P1 Critical</span></td>
+                            <td class="px-6 py-4 text-white font-semibold">Deprecated API Remediation</td>
+                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">java-11-deprecate-javaee-00001</td>
+                            <td class="px-6 py-4 text-center text-white font-bold text-lg">2</td>
+                            <td class="px-6 py-4 text-center text-slate-300">2 SP</td>
+                            <td class="px-6 py-4 text-slate-300">Introduce the jakarta.annotation-api dependency to replace removed legacy java.annotation modules.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">P2 Recommended</span></td>
+                            <td class="px-6 py-4 text-white font-semibold">Messaging Migration</td>
+                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">rabbitmq / amqp series</td>
+                            <td class="px-6 py-4 text-center text-white font-bold text-lg">19</td>
+                            <td class="px-6 py-4 text-center text-slate-300">5 SP</td>
+                            <td class="px-6 py-4 text-slate-300">Plan the mapping from RabbitMQ to Azure Service Bus and execute a phased cutover to a managed messaging backbone.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">P2 Recommended</span></td>
+                            <td class="px-6 py-4 text-white font-semibold">Database Managed-Service Adoption</td>
+                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">azure-database-postgresql-02000</td>
+                            <td class="px-6 py-4 text-center text-white font-bold text-lg">5</td>
+                            <td class="px-6 py-4 text-center text-slate-300">5 SP</td>
+                            <td class="px-6 py-4 text-slate-300">Advance PostgreSQL modernization with managed hosting, refactored connection management, and better resilience.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">P2 Recommended</span></td>
+                            <td class="px-6 py-4 text-white font-semibold">Credential Hardening</td>
+                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">azure-password-01000</td>
+                            <td class="px-6 py-4 text-center text-white font-bold text-lg">4</td>
+                            <td class="px-6 py-4 text-center text-slate-300">3 SP</td>
+                            <td class="px-6 py-4 text-slate-300">Eliminate plaintext secrets by integrating Azure Key Vault or passwordless access patterns.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-500/20 text-slate-400 border border-slate-500/30">P3 Optimization</span></td>
+                            <td class="px-6 py-4 text-white font-semibold">Restricted Config and localhost</td>
+                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">restricted-config / localhost</td>
+                            <td class="px-6 py-4 text-center text-white font-bold text-lg">4</td>
+                            <td class="px-6 py-4 text-center text-slate-300">2-3 SP</td>
+                            <td class="px-6 py-4 text-slate-300">Remove restricted properties and replace localhost endpoints with cloud service addresses.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Strategic Recommendations and Business Value -->
+    <section class="mb-10">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            </div>
+            Strategic Recommendations and Business Value
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="glass-card p-7 border-t-4 border-t-emerald-500 hover:scale-[1.02] transition-transform">
+                <div class="w-14 h-14 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-5">
+                    <svg class="w-7 h-7 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Cost Efficiency and TCO Optimization</h3>
+                <ul class="space-y-2 text-slate-400 text-sm leading-relaxed">
+                    <li>Migration to Azure managed services is expected to reduce infrastructure and operations cost by <span class="text-emerald-400 font-bold">35%+</span>.</li>
+                    <li>Self-managed middleware and storage stacks can be retired, removing hardware depreciation and platform maintenance overhead.</li>
+                    <li>Elastic capacity reduces waste created by peak-load overprovisioning.</li>
+                    <li>A unified Azure Monitor observability model can improve operations productivity by <span class="text-emerald-400 font-bold">40%+</span>.</li>
+                </ul>
+            </div>
+            <div class="glass-card p-7 border-t-4 border-t-brand-500 hover:scale-[1.02] transition-transform">
+                <div class="w-14 h-14 rounded-xl bg-brand-500/20 flex items-center justify-center mb-5">
+                    <svg class="w-7 h-7 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Business Agility and Responsiveness</h3>
+                <ul class="space-y-2 text-slate-400 text-sm leading-relaxed">
+                    <li>A cloud-native deployment model enables second-level elasticity for demand spikes.</li>
+                    <li>Release cycles are expected to shrink by <span class="text-brand-400 font-bold">60%+</span>, improving speed to market.</li>
+                    <li>Containerization and CI/CD create a significantly faster deployment path.</li>
+                    <li>Azure Container Apps and AKS support native blue-green and canary rollout models.</li>
+                </ul>
+            </div>
+            <div class="glass-card p-7 border-t-4 border-t-purple-500 hover:scale-[1.02] transition-transform">
+                <div class="w-14 h-14 rounded-xl bg-purple-500/20 flex items-center justify-center mb-5">
+                    <svg class="w-7 h-7 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Security, Compliance, and Risk Reduction</h3>
+                <ul class="space-y-2 text-slate-400 text-sm leading-relaxed">
+                    <li>Retire known high-severity exposure introduced by Java 8 and outdated Spring Boot dependencies.</li>
+                    <li>Use Azure Key Vault to remove four plaintext password exposures.</li>
+                    <li>Adopt Azure enterprise security baselines and zero-trust patterns.</li>
+                    <li>Use Microsoft Defender for Cloud for threat detection and compliance visibility.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="glass-card p-8">
+            <h3 class="text-lg font-semibold text-white mb-5">Quantified Business Outcome Snapshot</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="text-3xl font-extrabold gradient-text-gold mb-1">-35%</div>
+                    <p class="text-slate-400 text-sm">Infrastructure TCO Reduction</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-extrabold gradient-text mb-1">-60%</div>
+                    <p class="text-slate-400 text-sm">Release Cycle Compression</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-extrabold text-emerald-400 mb-1">99.95%</div>
+                    <p class="text-slate-400 text-sm">Azure SLA Availability Target</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-extrabold text-purple-400 mb-1">Zero-Trust</div>
+                    <p class="text-slate-400 text-sm">Enterprise Security Architecture</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. 30/60/90 Day Roadmap -->
+    <section class="mb-10">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-brand-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+            </div>
+            30 / 60 / 90 Day Modernization Roadmap
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+            <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-brand-600/50 via-purple-600/50 to-emerald-600/50 -z-10 transform -translate-y-1/2"></div>
+
+            <div class="glass-card p-7 relative hover:scale-[1.02] transition-transform">
+                <div class="absolute -top-3 left-6 bg-gradient-to-r from-brand-600 to-brand-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg shadow-brand-500/30">Phase 1: Days 0-30</div>
+                <h3 class="text-xl font-bold text-white mt-5 mb-4">Baseline Upgrade and High-Risk Remediation</h3>
+                <ul class="space-y-3 text-slate-400 text-sm">
+                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Upgrade Java 8 to Java 17 or 21 and resolve deprecated JDK API usage.</span></li>
+                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Complete major-version upgrades for Spring Boot and Spring Framework with regression validation.</span></li>
+                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Create Dockerfiles and establish a containerized build and local test baseline.</span></li>
+                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Add the jakarta.annotation-api dependency where required.</span></li>
+                </ul>
+                <div class="mt-4 pt-3 border-t border-slate-700/50 text-xs text-slate-500">Estimated effort: ~180 SP · Deliverable: a buildable and container-ready baseline release</div>
+            </div>
+
+            <div class="glass-card p-7 relative hover:scale-[1.02] transition-transform">
+                <div class="absolute -top-3 left-6 bg-gradient-to-r from-purple-600 to-purple-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg shadow-purple-500/30">Phase 2: Days 31-60</div>
+                <h3 class="text-xl font-bold text-white mt-5 mb-4">Cloud Middleware Replacement</h3>
+                <ul class="space-y-3 text-slate-400 text-sm">
+                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-purple-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Replace the AWS S3 SDK stack with Azure Blob Storage SDK integration.</span></li>
+                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-purple-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Remove local filesystem coupling and connect to Azure-backed persistent storage.</span></li>
+                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-purple-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Migrate PostgreSQL connectivity to Azure Database managed services.</span></li>
+                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-purple-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Replace plaintext passwords with Azure Key Vault and passwordless connection patterns.</span></li>
+                </ul>
+                <div class="mt-4 pt-3 border-t border-slate-700/50 text-xs text-slate-500">Estimated effort: ~180 SP · Deliverable: AWS dependencies removed and database tier cloud-ready</div>
+            </div>
+
+            <div class="glass-card p-7 relative hover:scale-[1.02] transition-transform">
+                <div class="absolute -top-3 left-6 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg shadow-emerald-500/30">Phase 3: Days 61-90</div>
+                <h3 class="text-xl font-bold text-white mt-5 mb-4">Full Cloud Deployment and Productivity Gains</h3>
+                <ul class="space-y-3 text-slate-400 text-sm">
+                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Cut over from RabbitMQ to Azure Service Bus through a phased production rollout.</span></li>
+                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Deploy to Azure App Service, Azure Container Apps, or AKS based on the selected landing zone.</span></li>
+                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Enable CI/CD pipelines and automatic scaling policies.</span></li>
+                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Integrate Azure Monitor for end-to-end observability.</span></li>
+                </ul>
+                <div class="mt-4 pt-3 border-t border-slate-700/50 text-xs text-slate-500">Estimated effort: ~102 SP · Deliverable: a production-ready cloud-native asset management platform</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. Resource Inventory and Cost Estimate -->
+    <section class="mb-10">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            </div>
+            Resource Inventory and Cost Estimate
+        </h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="glass-card overflow-hidden">
+                <div class="p-5 border-b border-slate-700/50 bg-slate-800/30">
+                    <h3 class="text-lg font-semibold text-rose-400">Current Deployment Resources (Local / AWS)</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-slate-400 text-xs uppercase border-b border-slate-700/50">
+                                <th class="px-5 py-3 text-left">Resource Type</th>
+                                <th class="px-5 py-3 text-left">Specification</th>
+                                <th class="px-5 py-3 text-right">Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700/30">
+                            <tr><td class="px-5 py-3 text-white">Application Server (Web)</td><td class="px-5 py-3 text-slate-400">Java 8 + Spring Boot, 2 vCPU / 4 GB</td><td class="px-5 py-3 text-right text-white">1</td></tr>
+                            <tr><td class="px-5 py-3 text-white">Worker Service</td><td class="px-5 py-3 text-slate-400">Java 8 + Spring Boot, 2 vCPU / 4 GB</td><td class="px-5 py-3 text-right text-white">1</td></tr>
+                            <tr><td class="px-5 py-3 text-white">AWS S3 Storage</td><td class="px-5 py-3 text-slate-400">Object storage, standard tier</td><td class="px-5 py-3 text-right text-white">1</td></tr>
+                            <tr><td class="px-5 py-3 text-white">PostgreSQL Database</td><td class="px-5 py-3 text-slate-400">Local deployment, 2 vCPU / 8 GB</td><td class="px-5 py-3 text-right text-white">1</td></tr>
+                            <tr><td class="px-5 py-3 text-white">RabbitMQ Queue</td><td class="px-5 py-3 text-slate-400">Local deployment, single node</td><td class="px-5 py-3 text-right text-white">1</td></tr>
+                            <tr><td class="px-5 py-3 text-white">Local File Storage</td><td class="px-5 py-3 text-slate-400">NAS or mounted disk</td><td class="px-5 py-3 text-right text-white">1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="glass-card overflow-hidden">
+                <div class="p-5 border-b border-slate-700/50 bg-emerald-900/20">
+                    <h3 class="text-lg font-semibold text-emerald-400">Target Azure Resource Inventory</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-slate-400 text-xs uppercase border-b border-slate-700/50">
+                                <th class="px-5 py-3 text-left">Azure Service</th>
+                                <th class="px-5 py-3 text-left">Specification</th>
+                                <th class="px-5 py-3 text-right">Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700/30">
+                            <tr><td class="px-5 py-3 text-white">Azure App Service / Container Apps</td><td class="px-5 py-3 text-slate-400">P1v3 (2 vCPU / 8 GB) or equivalent container instances</td><td class="px-5 py-3 text-right text-white">2</td></tr>
+                            <tr><td class="px-5 py-3 text-white">Azure Blob Storage</td><td class="px-5 py-3 text-slate-400">GPv2, Hot tier, LRS</td><td class="px-5 py-3 text-right text-white">1</td></tr>
+                            <tr><td class="px-5 py-3 text-white">Azure Database for PostgreSQL</td><td class="px-5 py-3 text-slate-400">Flexible Server, Burstable B2s</td><td class="px-5 py-3 text-right text-white">1</td></tr>
+                            <tr><td class="px-5 py-3 text-white">Azure Service Bus</td><td class="px-5 py-3 text-slate-400">Standard tier</td><td class="px-5 py-3 text-right text-white">1</td></tr>
+                            <tr><td class="px-5 py-3 text-white">Azure Key Vault</td><td class="px-5 py-3 text-slate-400">Standard tier</td><td class="px-5 py-3 text-right text-white">1</td></tr>
+                            <tr><td class="px-5 py-3 text-white">Azure Monitor + Log Analytics</td><td class="px-5 py-3 text-slate-400">Baseline logging and telemetry</td><td class="px-5 py-3 text-right text-white">1</td></tr>
+                            <tr><td class="px-5 py-3 text-white">Azure Container Registry</td><td class="px-5 py-3 text-slate-400">Basic tier</td><td class="px-5 py-3 text-right text-white">1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card p-8">
+            <h3 class="text-lg font-semibold text-white mb-5">Estimated Monthly Azure Cost (East Asia Reference Pricing)</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-slate-400 text-xs uppercase border-b border-slate-700/50">
+                            <th class="px-5 py-3 text-left">Azure Service</th>
+                            <th class="px-5 py-3 text-left">SKU</th>
+                            <th class="px-5 py-3 text-right">Estimated Monthly Cost (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-700/30">
+                        <tr><td class="px-5 py-3 text-white">App Service Plan (P1v3) x2</td><td class="px-5 py-3 text-slate-400">2 vCPU / 8 GB, Linux</td><td class="px-5 py-3 text-right text-amber-400 font-semibold">~$238</td></tr>
+                        <tr><td class="px-5 py-3 text-white">Azure Blob Storage</td><td class="px-5 py-3 text-slate-400">GPv2 Hot, 50 GB plus transactions</td><td class="px-5 py-3 text-right text-amber-400 font-semibold">~$5</td></tr>
+                        <tr><td class="px-5 py-3 text-white">Azure Database for PostgreSQL</td><td class="px-5 py-3 text-slate-400">Flexible Server Burstable B2s, 32 GB</td><td class="px-5 py-3 text-right text-amber-400 font-semibold">~$52</td></tr>
+                        <tr><td class="px-5 py-3 text-white">Azure Service Bus (Standard)</td><td class="px-5 py-3 text-slate-400">Baseline messaging throughput</td><td class="px-5 py-3 text-right text-amber-400 font-semibold">~$10</td></tr>
+                        <tr><td class="px-5 py-3 text-white">Azure Key Vault</td><td class="px-5 py-3 text-slate-400">Standard, low-volume operations</td><td class="px-5 py-3 text-right text-amber-400 font-semibold">~$1</td></tr>
+                        <tr><td class="px-5 py-3 text-white">Azure Monitor + Log Analytics</td><td class="px-5 py-3 text-slate-400">5 GB per month log ingestion</td><td class="px-5 py-3 text-right text-amber-400 font-semibold">~$12</td></tr>
+                        <tr><td class="px-5 py-3 text-white">Azure Container Registry (Basic)</td><td class="px-5 py-3 text-slate-400">10 GB storage</td><td class="px-5 py-3 text-right text-amber-400 font-semibold">~$5</td></tr>
+                        <tr class="bg-slate-800/40">
+                            <td class="px-5 py-4 text-white font-bold" colspan="2">Estimated Monthly Total</td>
+                            <td class="px-5 py-4 text-right text-2xl font-extrabold gradient-text">~$323/month</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-xs text-slate-500 mt-4">* This estimate is directional only. Actual cost depends on usage, region selection, and enterprise pricing agreements. Use the <a href="https://azure.microsoft.com/pricing/calculator/" class="text-brand-400 hover:underline">Azure Pricing Calculator</a> for precise sizing.</p>
+        </div>
+
+        <div class="glass-card p-6 mt-6">
+            <h3 class="text-lg font-semibold mb-2 text-white">Cost Trend Before and After Migration</h3>
+            <div id="costChart" class="chart-container"></div>
+        </div>
+    </section>
+
+    <!-- 9. Appendix -->
+    <section class="mb-10">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-slate-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            Appendix: Field Mapping Notes
+        </h2>
+        <div class="glass-card overflow-hidden">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="bg-slate-800/60 text-slate-300 text-xs uppercase">
+                        <th class="px-6 py-3 text-left">JSON Field Path</th>
+                        <th class="px-6 py-3 text-left">Meaning</th>
+                        <th class="px-6 py-3 text-right">Current Value</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-700/50 text-slate-400">
+                    <tr class="hover:bg-slate-800/20"><td class="px-6 py-3 font-mono text-xs text-brand-400">summary.totalProjects</td><td class="px-6 py-3">Total Assessed Projects</td><td class="px-6 py-3 text-right text-white font-semibold">1</td></tr>
+                    <tr class="hover:bg-slate-800/20"><td class="px-6 py-3 font-mono text-xs text-brand-400">summary.totalIssues</td><td class="px-6 py-3">Total Issues (aggregated by rule)</td><td class="px-6 py-3 text-right text-white font-semibold">17</td></tr>
+                    <tr class="hover:bg-slate-800/20"><td class="px-6 py-3 font-mono text-xs text-brand-400">summary.totalIncidents</td><td class="px-6 py-3">Total Incidents (code-level detections)</td><td class="px-6 py-3 text-right text-white font-semibold">87</td></tr>
+                    <tr class="hover:bg-slate-800/20"><td class="px-6 py-3 font-mono text-xs text-brand-400">summary.totalEffort</td><td class="px-6 py-3">Total Effort (Story Points)</td><td class="px-6 py-3 text-right text-white font-semibold">462</td></tr>
+                    <tr class="hover:bg-slate-800/20"><td class="px-6 py-3 font-mono text-xs text-brand-400">summary.charts.severity</td><td class="px-6 py-3">Severity Distribution</td><td class="px-6 py-3 text-right text-white font-semibold">mandatory:55 / optional:21 / potential:11</td></tr>
+                    <tr class="hover:bg-slate-800/20"><td class="px-6 py-3 font-mono text-xs text-brand-400">summary.charts.category</td><td class="px-6 py-3">Category Distribution</td><td class="px-6 py-3 text-right text-white font-semibold">12 categories</td></tr>
+                    <tr class="hover:bg-slate-800/20"><td class="px-6 py-3 font-mono text-xs text-brand-400">properties.jdkVersion</td><td class="px-6 py-3">JDK Version</td><td class="px-6 py-3 text-right text-white font-semibold">8</td></tr>
+                    <tr class="hover:bg-slate-800/20"><td class="px-6 py-3 font-mono text-xs text-brand-400">metadata.targetDisplayNames</td><td class="px-6 py-3">Target Deployment Platform</td><td class="px-6 py-3 text-right text-white font-semibold">App Service / Container Apps / AKS</td></tr>
+                    <tr class="hover:bg-slate-800/20"><td class="px-6 py-3 font-mono text-xs text-brand-400">metadata.analysisStartTime</td><td class="px-6 py-3">Assessment Start Time</td><td class="px-6 py-3 text-right text-white font-semibold">2026-03-12 09:42</td></tr>
+                    <tr class="hover:bg-slate-800/20"><td class="px-6 py-3 font-mono text-xs text-brand-400">metadata.analysisEndTime</td><td class="px-6 py-3">Assessment End Time</td><td class="px-6 py-3 text-right text-white font-semibold">2026-03-12 09:44</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <footer class="text-center text-slate-600 text-xs py-6 border-t border-slate-800">
+        <p>Generated by Java AppCAT CLI · Powered by Azure Application Modernization · This report is derived from automated assessment scan output.</p>
+        <p class="mt-1">Report Date: 2026-03-12 · Project: assets-manager-parent · Analysis Status: Complete</p>
+    </footer>
+
+</div>
+
+<script>
+    const textColor = '#94a3b8';
+    const splitLineColor = 'rgba(255,255,255,0.06)';
+
+    const gaugeChart = echarts.init(document.getElementById('healthGauge'));
+    gaugeChart.setOption({
+        series: [{
+            type: 'gauge',
+            startAngle: 180,
+            endAngle: 0,
+            min: 0,
+            max: 100,
+            splitNumber: 10,
+            itemStyle: {
+                color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                    { offset: 0, color: '#ef4444' },
+                    { offset: 0.5, color: '#f59e0b' },
+                    { offset: 1, color: '#10b981' }
+                ])
+            },
+            progress: { show: true, width: 14 },
+            pointer: { show: false },
+            axisLine: { lineStyle: { width: 14, color: [[1, 'rgba(255,255,255,0.08)']] } },
+            axisTick: { show: false },
+            splitLine: { show: false },
+            axisLabel: { show: false },
+            detail: {
+                valueAnimation: true,
+                offsetCenter: [0, '-10%'],
+                fontSize: 40,
+                fontWeight: 'bold',
+                color: '#fff',
+                formatter: '{value}'
+            },
+            title: {
+                offsetCenter: [0, '35%'],
+                color: '#94a3b8',
+                fontSize: 14
+            },
+            data: [{ value: 42, name: 'Cloud Readiness' }]
+        }]
+    });
+
+    const severityChart = echarts.init(document.getElementById('severityChart'));
+    severityChart.setOption({
+        tooltip: {
+            trigger: 'item',
+            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+            borderColor: 'rgba(255,255,255,0.1)',
+            textStyle: { color: '#f8fafc' }
+        },
+        legend: { bottom: 0, textStyle: { color: textColor }, itemGap: 20 },
+        series: [{
+            name: 'Severity',
+            type: 'pie',
+            radius: ['42%', '72%'],
+            center: ['50%', '45%'],
+            avoidLabelOverlap: false,
+            itemStyle: { borderRadius: 12, borderColor: '#0b1120', borderWidth: 3 },
+            label: { show: false, position: 'center' },
+            emphasis: {
+                label: { show: true, fontSize: 22, fontWeight: 'bold', color: '#fff' },
+                itemStyle: { shadowBlur: 20, shadowColor: 'rgba(0,0,0,0.5)' }
+            },
+            labelLine: { show: false },
+            data: [
+                { value: 55, name: 'Mandatory (Blocking)', itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 1, [{ offset: 0, color: '#ef4444' }, { offset: 1, color: '#dc2626' }]) } },
+                { value: 21, name: 'Optional', itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 1, [{ offset: 0, color: '#f59e0b' }, { offset: 1, color: '#d97706' }]) } },
+                { value: 11, name: 'Potential', itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 1, [{ offset: 0, color: '#06b6d4' }, { offset: 1, color: '#0891b2' }]) } }
+            ],
+            animationType: 'scale',
+            animationEasing: 'elasticOut'
+        }]
+    });
+
+    const categoryChart = echarts.init(document.getElementById('categoryChart'));
+    categoryChart.setOption({
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' },
+            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+            borderColor: 'rgba(255,255,255,0.1)',
+            textStyle: { color: '#f8fafc' }
+        },
+        grid: { left: '3%', right: '8%', bottom: '5%', top: '5%', containLabel: true },
+        xAxis: {
+            type: 'value',
+            axisLabel: { color: textColor },
+            splitLine: { lineStyle: { color: splitLineColor } }
+        },
+        yAxis: {
+            type: 'category',
+            data: ['Containerization', 'Java Upgrade', 'Deprecated APIs', 'Spring Migration', 'Region Config', 'Local Credentials', 'Local Resources', 'Database Migration', 'Storage Migration', 'Filesystem', 'Messaging', 'Framework Upgrade'],
+            axisLabel: { color: textColor, fontSize: 11 },
+            axisLine: { lineStyle: { color: splitLineColor } }
+        },
+        series: [{
+            name: 'Incidents',
+            type: 'bar',
+            barWidth: '50%',
+            data: [
+                { value: 1, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#6366f1' }, { offset: 1, color: '#818cf8' }]) } },
+                { value: 1, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#6366f1' }, { offset: 1, color: '#818cf8' }]) } },
+                { value: 2, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#8b5cf6' }, { offset: 1, color: '#a78bfa' }]) } },
+                { value: 2, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#8b5cf6' }, { offset: 1, color: '#a78bfa' }]) } },
+                { value: 4, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#06b6d4' }, { offset: 1, color: '#22d3ee' }]) } },
+                { value: 4, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#06b6d4' }, { offset: 1, color: '#22d3ee' }]) } },
+                { value: 4, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#06b6d4' }, { offset: 1, color: '#22d3ee' }]) } },
+                { value: 5, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#f59e0b' }, { offset: 1, color: '#fbbf24' }]) } },
+                { value: 12, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#f59e0b' }, { offset: 1, color: '#fbbf24' }]) } },
+                { value: 14, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#ef4444' }, { offset: 1, color: '#f87171' }]) } },
+                { value: 19, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#ef4444' }, { offset: 1, color: '#f87171' }]) } },
+                { value: 19, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#dc2626' }, { offset: 1, color: '#ef4444' }]) } }
+            ],
+            itemStyle: { borderRadius: [0, 6, 6, 0] },
+            label: { show: true, position: 'right', color: textColor, fontSize: 11 }
+        }]
+    });
+
+    const radarChart = echarts.init(document.getElementById('radarChart'));
+    radarChart.setOption({
+        radar: {
+            indicator: [
+                { name: 'Architecture Decoupling', max: 100 },
+                { name: 'Dependency Compatibility', max: 100 },
+                { name: 'Data Platform', max: 100 },
+                { name: 'Security Compliance', max: 100 },
+                { name: 'Operations Visibility', max: 100 },
+                { name: 'Container Readiness', max: 100 }
+            ],
+            splitNumber: 4,
+            axisName: { color: '#cbd5e1', fontSize: 12 },
+            splitLine: { lineStyle: { color: splitLineColor } },
+            splitArea: { show: false },
+            axisLine: { lineStyle: { color: splitLineColor } }
+        },
+        tooltip: { backgroundColor: 'rgba(15,23,42,0.9)', borderColor: 'rgba(255,255,255,0.1)', textStyle: { color: '#f8fafc' } },
+        legend: { bottom: 0, textStyle: { color: textColor } },
+        series: [{
+            type: 'radar',
+            data: [
+                {
+                    value: [70, 25, 45, 35, 30, 15],
+                    name: 'Current State',
+                    itemStyle: { color: '#f59e0b' },
+                    lineStyle: { width: 2, color: '#f59e0b' },
+                    areaStyle: { color: 'rgba(245, 158, 11, 0.2)' }
+                },
+                {
+                    value: [95, 95, 95, 90, 90, 100],
+                    name: 'Target State (after 90 days)',
+                    itemStyle: { color: '#10b981' },
+                    lineStyle: { width: 2, color: '#10b981' },
+                    areaStyle: { color: 'rgba(16, 185, 129, 0.2)' }
+                }
+            ]
+        }]
+    });
+
+    const roiChart = echarts.init(document.getElementById('roiChart'));
+    roiChart.setOption({
+        tooltip: {
+            trigger: 'axis',
+            backgroundColor: 'rgba(15,23,42,0.9)',
+            borderColor: 'rgba(255,255,255,0.1)',
+            textStyle: { color: '#f8fafc' }
+        },
+        legend: { bottom: 0, textStyle: { color: textColor } },
+        grid: { left: '3%', right: '4%', bottom: '15%', top: '10%', containLabel: true },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['Current', 'Month 1', 'Month 2', 'Month 3', 'Month 6', 'Month 12'],
+            axisLabel: { color: textColor },
+            axisLine: { lineStyle: { color: splitLineColor } }
+        },
+        yAxis: {
+            type: 'value',
+            name: 'Composite Cost (normalized)',
+            nameTextStyle: { color: textColor },
+            axisLabel: { color: textColor },
+            splitLine: { lineStyle: { color: splitLineColor } }
+        },
+        series: [
+            {
+                name: 'Traditional Operating Cost',
+                type: 'line',
+                data: [100, 100, 102, 104, 108, 115],
+                itemStyle: { color: '#ef4444' },
+                lineStyle: { type: 'dashed', width: 2 },
+                symbol: 'circle',
+                symbolSize: 6
+            },
+            {
+                name: 'Cloud-Native Cost',
+                type: 'line',
+                data: [100, 115, 95, 78, 68, 65],
+                itemStyle: { color: '#10b981' },
+                lineStyle: { width: 3 },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(16, 185, 129, 0.4)' },
+                        { offset: 1, color: 'rgba(16, 185, 129, 0.0)' }
+                    ])
+                },
+                smooth: true,
+                symbol: 'circle',
+                symbolSize: 8
+            }
+        ]
+    });
+
+    const costChart = echarts.init(document.getElementById('costChart'));
+    costChart.setOption({
+        tooltip: {
+            trigger: 'axis',
+            backgroundColor: 'rgba(15,23,42,0.9)',
+            borderColor: 'rgba(255,255,255,0.1)',
+            textStyle: { color: '#f8fafc' },
+            formatter: function(params) {
+                let res = params[0].name + '<br/>';
+                params.forEach(p => { res += p.marker + ' ' + p.seriesName + ': <b>$' + p.value + '/month</b><br/>'; });
+                return res;
+            }
+        },
+        legend: { bottom: 0, textStyle: { color: textColor } },
+        grid: { left: '3%', right: '4%', bottom: '15%', top: '10%', containLabel: true },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['Pre-migration', 'Month 1', 'Month 2', 'Month 3', 'Month 6', 'Month 12'],
+            axisLabel: { color: textColor },
+            axisLine: { lineStyle: { color: splitLineColor } }
+        },
+        yAxis: {
+            type: 'value',
+            name: 'USD/month',
+            nameTextStyle: { color: textColor },
+            axisLabel: { color: textColor, formatter: '${value}' },
+            splitLine: { lineStyle: { color: splitLineColor } }
+        },
+        series: [
+            {
+                name: 'Traditional Deployment Cost',
+                type: 'line',
+                data: [500, 500, 510, 510, 520, 530],
+                itemStyle: { color: '#ef4444' },
+                lineStyle: { type: 'dashed', width: 2 },
+                symbol: 'circle',
+                symbolSize: 6
+            },
+            {
+                name: 'Azure Cloud Cost',
+                type: 'line',
+                data: [500, 550, 420, 340, 323, 310],
+                itemStyle: { color: '#06b6d4' },
+                lineStyle: { width: 3 },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(6, 182, 212, 0.35)' },
+                        { offset: 1, color: 'rgba(6, 182, 212, 0.0)' }
+                    ])
+                },
+                smooth: true,
+                symbol: 'circle',
+                symbolSize: 8
+            }
+        ],
+        graphic: [{
+            type: 'text',
+            left: '70%',
+            top: '25%',
+            style: {
+                text: 'Savings ~35%',
+                fontSize: 16,
+                fontWeight: 'bold',
+                fill: '#10b981'
+            }
+        }]
+    });
+
+    window.addEventListener('resize', function() {
+        gaugeChart.resize();
+        severityChart.resize();
+        categoryChart.resize();
+        radarChart.resize();
+        roiChart.resize();
+        costChart.resize();
+    });
+</script>
+
+</body>
+</html>

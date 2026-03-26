@@ -145,11 +145,11 @@ The default App Mod assessment data is stored in `./.github/appmod/appcat`.
 
 ![Report location](doc-media/ttt-report-location-new.png)
 
-You can generate a customer-facing report from that assessment data. This repository already includes a sample report prompt and sample output template files.
+You can generate a customer-facing report from that assessment data. This repository already includes an English sample report prompt and sample output template files.
 
 ![Custom report prompt](doc-media/ttt-report-prompt.png)
 
-Add the generated assessment files `report.json` and `result.json`, plus the custom report prompt file `report-prompt-sample.md`, into Copilot Chat context. Then use an instruction such as: `Follow report-prompt-sample.md, use report-sample-new.html as the template, and generate a report named report.html`.
+Add the generated assessment files `report.json` and `result.json`, plus the custom report prompt file `report-prompt-sample.en.md`, into Copilot Chat context. Then use an instruction such as: `Follow report-prompt-sample.en.md, use report-sample-new.en.html as the template, and generate a report named report.html`.
 
 ![Custom report instruction](doc-media/ttt-customize-report-chat.png)
 
