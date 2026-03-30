@@ -157,7 +157,7 @@ Add the generated assessment files `report.json` and `result.json`, plus the cus
 
 Example output:
 
-![Customized report example](doc-media/ttt-customized-report-final.png)
+![Customized report example](doc-media/ttt-customized-report-final-en.png)
 
 ---
 
